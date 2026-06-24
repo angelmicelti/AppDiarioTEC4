@@ -153,8 +153,9 @@
         .scell-future-entry { animation: planBlink 1.4s ease-in-out infinite; position: relative; }
         .scell-future-entry::after {
             content: '📅';
-            position: absolute; top: 1px; right: 3px;
-            font-size: 0.6rem; opacity: 0.85;
+            position: absolute; top: 1px; right: 2px;
+            font-size: 0.55rem; opacity: 0.85; line-height: 1;
+            pointer-events: none;
             animation: planIconBlink 1.4s ease-in-out infinite;
         }
         @keyframes planBlink {
@@ -172,6 +173,8 @@
         }
         .scell-preview { font-size: 0.55rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px; }
         .scell-check { font-size: 0.75rem; font-weight: 800; line-height: 1; margin-top: 2px; opacity: 0.9; }
+        /* Nombre de grupo en celdas: truncar para evitar overflow/superposición */
+        .scell-group-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; padding: 0 2px; }
         .week-card { border-radius: 1rem; overflow: hidden; }
         .week-card.current-week { ring: 1px; }
         /* Panel desplegable "Ir a…" para saltar a cualquier semana del curso */
@@ -179,10 +182,13 @@
         #weekJumpDetails[open] > summary { background: #eef2ff; border-color: #c7d2fe; color: #4f46e5; }
         .week-jump-panel {
             position: absolute; top: calc(100% + 6px); right: 0;
-            min-width: 280px; max-width: min(90vw, 360px);
+            min-width: 200px; max-width: min(90vw, 360px);
             background: #ffffff; border: 1px solid #e5e7eb; border-radius: 0.75rem;
             box-shadow: 0 10px 40px rgba(15, 23, 42, 0.14);
             z-index: 50; max-height: 60vh; overflow-y: auto; padding: 8px;
+        }
+        @media (max-width: 640px) {
+            .week-jump-panel { min-width: min(85vw, 280px); right: -10px; }
         }
         .week-jump-empty { padding: 16px; text-align: center; color: #9ca3af; font-size: 0.8rem; }
         .week-jump-month { font-size: 0.7rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 8px 4px; position: sticky; top: 0; background: #ffffff; }
@@ -203,8 +209,10 @@
         .week-jump-badge.now { background: #06b6d4; color: #fff; }
         .week-jump-badge.future { background: #f59e0b; color: #fff; }
         .week-jump-badge.past { background: #94a3b8; color: #fff; }
-        .week-header { padding: 0.5rem 0.75rem; background: #f9fafb; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
+        .week-header { padding: 0.5rem 0.75rem; background: #f9fafb; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
         .week-card.current-week .week-header { background: #eef2ff; border-bottom-color: #c7d2fe; }
+        /* El span de fecha del week-header debe poder encogerse y envolverse en móvil */
+        .week-header > span:first-child { min-width: 0; flex: 1 1 auto; }
         .scell-table { width: 100%; border-collapse: separate; border-spacing: 2px; }
         .scell-table th { padding: 4px 2px; font-size: 0.6rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; text-align: center; }
         .scell-table th.today-th { color: #4f46e5; }
@@ -417,6 +425,11 @@
             /* Botones ctag en móvil: permiten wrap de texto y reducen padding */
             .ctag { padding: 8px 10px; font-size: 0.78rem; white-space: normal !important; line-height: 1.15; }
             .ctag-wrap { min-width: 0; }
+            /* === Diario: barra de navegación semanal apilada en móvil === */
+            .diario-nav-bar { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .diario-nav-bar > div { width: 100%; justify-content: center; }
+            .diario-nav-bar > div:nth-child(2) { order: -1; /* etiqueta arriba */ }
+            .diario-nav-bar button { flex: 1; justify-content: center; }
             /* Calendario del Diario: scroll horizontal si hace falta + celdas más compactas */
             .scell-table { font-size: 0.55rem; }
             .week-card .p-2 { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -504,7 +517,7 @@
         <!-- DIARIO TAB -->
         <section id="tab-diario" class="tab-content fade-in">
             <!-- Barra de navegación entre semanas -->
-            <div class="glass rounded-2xl p-3 mb-4 max-w-3xl mx-auto flex items-center justify-between gap-2 flex-wrap">
+            <div class="glass rounded-2xl p-3 mb-4 max-w-3xl mx-auto flex items-center justify-between gap-2 flex-wrap diario-nav-bar">
                 <div class="flex items-center gap-2">
                     <button onclick="navPrevWeek()" class="bg-white border border-slate-200 hover:bg-indigo-50 hover:border-indigo-200 px-3 py-2 rounded-lg text-sm flex items-center gap-1 transition text-slate-700" title="Semana anterior (una a una)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
@@ -2035,7 +2048,7 @@
                     html += `<td><div class="${cls}" style="${inline}" onclick="openDiarioModal('${dateStr}',${di},${hi},'${groupId}')">`;
 
                     if (group) {
-                        html += `<span class="font-semibold">${group.name}</span>`;
+                        html += `<span class="font-semibold scell-group-name">${group.name}</span>`;
                         if (entry) {
                             html += `<div class="scell-check" style="color:${gc.text}">✓</div>`;
                         }
