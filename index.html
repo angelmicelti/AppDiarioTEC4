@@ -240,6 +240,15 @@
         /* Botón "Nueva actividad" — estilo esmeralda/teal coherente con el botón Guardar del modal */
         .ctag-act-new { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
         .ctag-act-new:hover { background: #059669; color: #ffffff; border-color: #059669; }
+        /* Grid de botones superiores de Actividades: 2x2 en móvil, 2:2:2:1 en escritorio */
+        .actividades-top-grid { grid-template-columns: 1fr 1fr; }
+        @media (min-width: 641px) {
+            .actividades-top-grid { grid-template-columns: 2fr 2fr 2fr 1fr; }
+        }
+        /* En móvil, los botones de Actividades permiten texto centrado y wrap */
+        @media (max-width: 640px) {
+            .actividades-top-grid .ctag { text-align: center; justify-content: center; padding: 10px 6px; font-size: 0.75rem; }
+        }
         .ctag-count { font-size: 0.75rem; font-weight: 500; opacity: 0.7; }
         .ctag.active .ctag-count { opacity: 0.85; }
         /* Filtered inline list below ctag buttons */
@@ -599,18 +608,18 @@
         <!-- ACTIVIDADES TAB -->
         <section id="tab-actividades" class="tab-content hidden fade-in">
             <div class="glass rounded-2xl p-5">
-                <div class="flex items-stretch gap-1 mb-4">
-                    <div class="ctag-wrap" style="flex: 2;">
+                <div class="grid gap-1 mb-4 actividades-top-grid">
+                    <div class="ctag-wrap">
                         <div class="ctag ctag-act-all active" id="tagActAll" onclick="setActProposalAll()">📚 Todas <span class="ctag-count" id="tagActAllCount">0</span></div>
                     </div>
-                    <div class="ctag-wrap" style="flex: 2;">
-                        <div class="ctag ctag-act-yes" id="tagActYes" onclick="toggleActProposalFilter('proposed')">📋 Actividades propuestas <span class="ctag-count" id="tagActYesCount">0</span></div>
+                    <div class="ctag-wrap">
+                        <div class="ctag ctag-act-yes" id="tagActYes" onclick="toggleActProposalFilter('proposed')">📋 Propuestas <span class="ctag-count" id="tagActYesCount">0</span></div>
                     </div>
-                    <div class="ctag-wrap" style="flex: 2;">
-                        <div class="ctag ctag-act-no" id="tagActNo" onclick="toggleActProposalFilter('notproposed')">⬜ Actividades sin proponer <span class="ctag-count" id="tagActNoCount">0</span></div>
+                    <div class="ctag-wrap">
+                        <div class="ctag ctag-act-no" id="tagActNo" onclick="toggleActProposalFilter('notproposed')">⬜ Sin proponer <span class="ctag-count" id="tagActNoCount">0</span></div>
                     </div>
-                    <div class="ctag-wrap" style="flex: 1;">
-                        <div class="ctag ctag-act-new justify-center" onclick="openActivityModal()" title="Crear nueva actividad">➕ Nueva actividad</div>
+                    <div class="ctag-wrap">
+                        <div class="ctag ctag-act-new justify-center" onclick="openActivityModal()" title="Crear nueva actividad">➕ Nueva</div>
                     </div>
                 </div>
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
