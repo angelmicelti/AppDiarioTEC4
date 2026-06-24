@@ -1,6 +1,6 @@
 {
-  "name": "TEC4 Diario de Clase",
-  "short_name": "TEC4 Diario",
+  "name": "Diario de Clase TEC4",
+  "short_name": "Diario TEC4",
   "description": "Diario de clase para Tecnología 4º ESO · Andalucía. Gestión de grupos, alumnado, horario, diario, actividades, saberes básicos, criterios e informes.",
   "start_url": "./index.html",
   "scope": "./",
