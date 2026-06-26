@@ -467,6 +467,105 @@
             .report-doc table { font-size: 0.7rem !important; display: block; overflow-x: auto; white-space: nowrap; }
             .report-doc th, .report-doc td { padding: 4px 6px !important; }
         }
+
+        /* ============================================================
+           MODELO MIXTO (V3) — Navbar en desktop, pantalla de inicio en móvil/tablet
+           Breakpoint: 1024px (móvil/tablet < 1024px, desktop ≥ 1024px)
+           ============================================================ */
+
+        /* --- Pantalla de inicio (solo visible en móvil/tablet) --- */
+        #tab-inicio {
+            min-height: calc(100vh - 200px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+        #tab-inicio.hidden { display: none !important; }
+        .inicio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 2 / 4;
+            max-height: calc(100vh - 200px);
+        }
+        .inicio-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border-radius: 1.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            user-select: none;
+            border: 1px solid transparent;
+        }
+        .inicio-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+        }
+        .inicio-btn:active { transform: translateY(-1px); }
+        .inicio-btn svg { width: 2.5rem; height: 2.5rem; }
+        .inicio-btn-label { font-size: 1rem; font-weight: 600; }
+        .inicio-btn-sub { font-size: 0.7rem; opacity: 0.7; font-weight: 400; }
+        .ib-diario { background: linear-gradient(135deg, #eef2ff, #e0e7ff); color: #4338ca; border-color: #c7d2fe; }
+        .ib-alumnado { background: linear-gradient(135deg, #ecfeff, #cffafe); color: #0e7490; border-color: #a5f3fc; }
+        .ib-horario { background: linear-gradient(135deg, #f0fdfa, #ccfbf1); color: #115e59; border-color: #99f6e4; }
+        .ib-actividades { background: linear-gradient(135deg, #ecfdf5, #d1fae5); color: #047857; border-color: #a7f3d0; }
+        .ib-saberes { background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #c2410c; border-color: #fed7aa; }
+        .ib-criterios { background: linear-gradient(135deg, #faf5ff, #f3e8ff); color: #7e22ce; border-color: #e9d5ff; }
+        .ib-informes { background: linear-gradient(135deg, #fffbeb, #fef3c7); color: #b45309; border-color: #fde68a; }
+
+        /* --- Botón flotante "Inicio" (solo en móvil/tablet) --- */
+        .home-fab {
+            position: fixed;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            z-index: 45;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .home-fab.hidden { display: none !important; }
+        .home-fab:hover { background: #4338ca; transform: translateY(-50%) scale(1.08); }
+        .home-fab:active { transform: translateY(-50%) scale(0.95); }
+        .home-fab svg { width: 1.75rem; height: 1.75rem; }
+
+        /* === Media queries del modelo mixto === */
+        /* Desktop (≥1024px): mostrar navbar, ocultar pantalla de inicio y FAB */
+        @media (min-width: 1024px) {
+            .glass-nav { display: block !important; }
+            #tab-inicio { display: none !important; }
+            .home-fab { display: none !important; }
+        }
+        /* Móvil/Tablet (<1024px): ocultar navbar, mostrar pantalla de inicio + FAB */
+        @media (max-width: 1023px) {
+            .glass-nav { display: none !important; }
+            .inicio-grid { gap: 0.5rem; max-width: 100%; }
+            .inicio-btn { padding: 0.75rem; border-radius: 1rem; }
+            .inicio-btn svg { width: 2rem; height: 2rem; }
+            .inicio-btn-label { font-size: 0.85rem; }
+            .inicio-btn-sub { font-size: 0.65rem; }
+            .home-fab { width: 48px; height: 48px; right: 0.75rem; }
+            .home-fab svg { width: 1.5rem; height: 1.5rem; }
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -522,6 +621,52 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-6">
+
+        <!-- PANTALLA DE INICIO (V3 — solo visible en móvil/tablet) -->
+        <section id="tab-inicio" class="tab-content fade-in hidden">
+            <div class="inicio-grid">
+                <div class="inicio-btn ib-diario" onclick="showTab('diario')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <span class="inicio-btn-label">Diario</span>
+                    <span class="inicio-btn-sub">Sesiones y planificación</span>
+                </div>
+                <div class="inicio-btn ib-alumnado" onclick="showTab('alumnado')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    <span class="inicio-btn-label">Alumnado</span>
+                    <span class="inicio-btn-sub">Grupos y observaciones</span>
+                </div>
+                <div class="inicio-btn ib-horario" onclick="showTab('horario')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span class="inicio-btn-label">Horario</span>
+                    <span class="inicio-btn-sub">Grupos y franjas</span>
+                </div>
+                <div class="inicio-btn ib-actividades" onclick="showTab('actividades')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span class="inicio-btn-label">Actividades</span>
+                    <span class="inicio-btn-sub">Propuestas y etiquetas</span>
+                </div>
+                <div class="inicio-btn ib-saberes" onclick="showTab('saberes')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    <span class="inicio-btn-label">Saberes</span>
+                    <span class="inicio-btn-sub">Básicos trabajados</span>
+                </div>
+                <div class="inicio-btn ib-criterios" onclick="showTab('criterios')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    <span class="inicio-btn-label">Criterios</span>
+                    <span class="inicio-btn-sub">De evaluación</span>
+                </div>
+                <div class="inicio-btn ib-informes" onclick="showTab('informes')">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <span class="inicio-btn-label">Informes</span>
+                    <span class="inicio-btn-sub">Resumen y exportación</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Botón flotante Inicio (solo visible en móvil/tablet, oculto en pantalla de inicio) -->
+        <button id="homeFab" class="home-fab hidden" onclick="goHome()" title="Volver al inicio">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </button>
 
         <!-- DIARIO TAB -->
         <section id="tab-diario" class="tab-content fade-in">
@@ -1391,12 +1536,23 @@
     function saveData() { saveDataLocal(); saveDataFirebase(); }
     function generateId() { return Date.now().toString(36) + Math.random().toString(36).substr(2,5); }
 
+    // Detectar si estamos en modo móvil/tablet (pantalla < 1024px)
+    function isMobileMode() { return window.innerWidth < 1024; }
+
     function showTab(t) {
         activeTab = t;
         document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden'));
-        document.getElementById('tab-'+t).classList.remove('hidden');
+        const tabEl = document.getElementById('tab-'+t);
+        if (tabEl) tabEl.classList.remove('hidden');
+        // Actualizar estado activo de los botones de la navbar (solo visible en desktop)
         document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('text-slate-500'); });
-        const ab = document.querySelector(`.tab-btn[data-tab="${t}"]`); ab.classList.add('tab-active'); ab.classList.remove('text-slate-500');
+        const ab = document.querySelector(`.tab-btn[data-tab="${t}"]`);
+        if (ab) { ab.classList.add('tab-active'); ab.classList.remove('text-slate-500'); }
+        // Botón flotante Inicio: visible solo en móvil/tablet y cuando NO estamos en la pantalla de inicio
+        const fab = document.getElementById('homeFab');
+        if (fab) fab.classList.toggle('hidden', t === 'inicio');
+        // Scroll al inicio de la página al cambiar de pantalla
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         if(t==='diario') { renderDiario(); }
         if(t==='alumnado') renderStudents();
         if(t==='horario') { renderGroups(); renderSchedule(); }
@@ -1405,6 +1561,20 @@
         if(t==='criterios') { populateCriteriaGroupFilter(); renderCriteriaDashboard(); }
         if(t==='informes') { populateInformesGroupFilter(); renderInformes(); }
     }
+    // Volver a la pantalla de inicio (modo móvil/tablet)
+    function goHome() { showTab('inicio'); }
+
+    // Al cambiar el tamaño de ventana y cruzar el breakpoint 1024px, cambiar de modo
+    let _wasMobile = isMobileMode();
+    window.addEventListener('resize', function() {
+        const _isMob = isMobileMode();
+        if (_isMob !== _wasMobile) {
+            _wasMobile = _isMob;
+            // Si pasamos a desktop → mostrar Diario (la navbar gestiona la navegación)
+            // Si pasamos a móvil → mostrar pantalla de inicio
+            showTab(_isMob ? 'inicio' : 'diario');
+        }
+    });
 
     // GRUPOS
     function addGroup(e) { e.preventDefault(); const n = document.getElementById('groupName').value.trim(); if(!n || data.groups.find(g=>g.name.toLowerCase()===n.toLowerCase())) { alert('Grupo existente o vacío'); return; } data.groups.push({id:generateId(), name:n}); saveData(); document.getElementById('groupName').value=''; renderGroups(); updateAllGroupSelects(); }
@@ -3049,7 +3219,7 @@ ${body}
     // Exporta el sobre completo (todos los cursos). Si se quiere exportar solo el curso activo,
     // basta con exportar appData.courseData[currentCourseId], pero lo habitual es llevarse todos.
     function exportAllData() { const b=new Blob([JSON.stringify(appData,null,2)],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=`tec4_diario_${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(u); }
-    function importAllData(event) { const f=event.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=function(e) { try { const imp=JSON.parse(e.target.result); if(confirm('¿Reemplazar todos los datos actuales (incluidos todos los cursos)?')) { if (imp && Array.isArray(imp.courses) && imp.courseData) { appData=imp; normalizeAppData(); } else { appData=migrateOldFormat(imp); normalizeAppData(); } normalizeData(); diarioWeekOffset = computeInitialOffsetForCourse(appData.currentCourseId); saveData(); populateCourseSelector(); updateAllGroupSelects(); showTab('diario'); alert('Importado'); } } catch(err) { alert('Error'); } }; r.readAsText(f); event.target.value=''; }
+    function importAllData(event) { const f=event.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=function(e) { try { const imp=JSON.parse(e.target.result); if(confirm('¿Reemplazar todos los datos actuales (incluidos todos los cursos)?')) { if (imp && Array.isArray(imp.courses) && imp.courseData) { appData=imp; normalizeAppData(); } else { appData=migrateOldFormat(imp); normalizeAppData(); } normalizeData(); diarioWeekOffset = computeInitialOffsetForCourse(appData.currentCourseId); saveData(); populateCourseSelector(); updateAllGroupSelects(); showTab(isMobileMode() ? 'inicio' : 'diario'); alert('Importado'); } } catch(err) { alert('Error'); } }; r.readAsText(f); event.target.value=''; }
 
     // Cierra el desplegable "Ir a…" al hacer clic fuera de él.
     document.addEventListener('click', function(e) {
@@ -3094,7 +3264,8 @@ ${body}
         diarioWeekOffset = computeInitialOffsetForCourse(appData.currentCourseId);
         populateCourseSelector();
         updateAllGroupSelects();
-        showTab('diario');
+        // En desktop arrancar en Diario; en móvil/tablet en la pantalla de inicio
+        showTab(isMobileMode() ? 'inicio' : 'diario');
     }
     init();
 
