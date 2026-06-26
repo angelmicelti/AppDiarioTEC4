@@ -5,7 +5,7 @@
 // 3. Network-first para el HTML principal (para obtener actualizaciones), fallback a cache
 // 4. Cache-first para imágenes e icons
 
-const CACHE_VERSION = 'tec4-diario-v5';
+const CACHE_VERSION = 'tec4-diario-v6';
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
